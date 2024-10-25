@@ -4,8 +4,8 @@ GET /users - List all users  - Done
 GET /user/1 - Get the user with ID 1 - Done 
 GET /user/2 - Get the user with ID 2 - Done
 
-POST /user - create new user
+POST /user - create new user - Done
 
-PATCH /user/1 - Edit the user with ID 1 
+PATCH /user/1 - Edit the user with ID 1 - Done
 
-DELETE /user/1 - Delete the user with ID 1
+DELETE /user/1 - Delete the user with ID 1 - Done
