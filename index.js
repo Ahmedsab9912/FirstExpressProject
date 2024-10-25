@@ -1,24 +1,49 @@
+/**
+ * REST API for managing users
+ * @module server
+ * @requires express
+ * @requires fs
+ * @requires ./userdata.json
+ */
 const express = require("express");
 const fs = require("fs");
 let users = require("./userdata.json"); // Use `let` so we can reassign `users`
 const app = express();
 const PORT = 8000;
 
-// Middleware
-app.use(express.json()); // Allows handling JSON payloads in requests
+/**
+ * Middleware
+ */
 app.use(express.urlencoded({ extended: false }));
 
-// Start the server
+app.use((req, res, next) => {
+  fs.appendFile(
+    "log.txt",
+    `\n${Date.now()}:${req.ip}:${req.method}:${req.path}`,
+    (err) => {
+      return next();
+    }
+  );
+});
+
+/**
+ * Start the server
+ */
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// GET all users
+/**
+ * GET all users
+ */
 app.get("/api/users", (req, res) => {
+  res.setHeader("X-myName", "Ahmed Baig");
   return res.json(users);
 });
 
-// CRUD operations for individual user
+/**
+ * CRUD operations for individual user
+ */
 app
   .route("/api/users/:id")
   .get((req, res) => {
@@ -37,7 +62,9 @@ app
     fs.writeFile("./userdata.json", JSON.stringify(users, null, 2), (err) => {
       if (err)
         return res.status(500).json({ error: "Error updating user data" });
-      return res.json({ status: "User updated successfully", user });
+      return res
+        .status(270)
+        .json({ status: "User updated successfully", user });
     });
   })
   .delete((req, res) => {
@@ -48,11 +75,13 @@ app
     users.splice(index, 1); // Remove user from array
     fs.writeFile("./userdata.json", JSON.stringify(users, null, 2), (err) => {
       if (err) return res.status(500).json({ error: "Error deleting user" });
-      return res.json({ status: "User deleted successfully", id });
+      return res.status(420).json({ status: "User deleted successfully", id });
     });
   });
 
-// POST a new user
+/**
+ * POST a new user
+ */
 app.post("/api/users", (req, res) => {
   const body = req.body;
   const newUser = {
@@ -63,6 +92,8 @@ app.post("/api/users", (req, res) => {
 
   fs.writeFile("./userdata.json", JSON.stringify(users, null, 2), (err) => {
     if (err) return res.status(500).json({ error: "Error adding user" });
-    return res.json({ status: "User added successfully", user: newUser });
+    return res
+      .status(201)
+      .json({ status: "User added successfully", user: newUser });
   });
 });
