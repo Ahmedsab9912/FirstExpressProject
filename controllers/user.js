@@ -42,29 +42,25 @@ async function handelDeleteUserById(req, res) {
 }
 
 // Creating new User in DB
-
 async function handelCreateUser(req, res) {
-  const body = req.body;
-  if (
-    !body ||
-    !body.firstName ||
-    !body.lastName ||
-    !body.email ||
-    !body.jobTitle ||
-    !body.gender
-  ) {
+  console.log(req.body); // Log the body for debugging
+  const { firstName, lastName, email, jobTitle, gender } = req.body;
+  if (!firstName || !lastName || !email || !jobTitle || !gender) {
     return res.status(400).json({ error: "Missing required fields" });
   }
-  const result = await User.create({
-    firstName: body.firstName,
-    lastName: body.lastName,
-    email: body.email,
-    jobTitle: body.jobTitle,
-    gender: body.gender,
-  });
-  console.log(result);
-
-  return res.status(201).json({ msg: "User Created Success", result });
+  try {
+    const newUser = await User.create({
+      firstName,
+      lastName,
+      email,
+      jobTitle,
+      gender,
+    });
+    console.log(newUser);
+    return res.status(201).json({ msg: "User Created Successfully", newUser });
+  } catch (error) {
+    return res.status(500).json({ error: "Error creating user" });
+  }
 }
 
 module.exports = {

@@ -14,7 +14,9 @@ connectDB("mongodb://127.0.0.1:27017/youtube-app-1").then(() =>
 /**
  * Middleware
  */
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json());
 
 app.use(logRegRes("log.txt"));
 
